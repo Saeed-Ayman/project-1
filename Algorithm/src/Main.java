@@ -21,10 +21,10 @@ public class Main {
     public static void main(String[] args) {
         test("Quick",       new Quick<Integer>());
         test("Merge",       new Merge<Integer>());
-       /* test("Div And Con", new DivAndCon<Integer>());
+        test("Div And Con", new DivAndCon<Integer>());
         test("Bubble",      new Bubble<Integer>());
         test("Selection",   new Selection<Integer>());
-        test("Insertion",   new Insertion<Integer>());*/
+        test("Insertion",   new Insertion<Integer>());
     }
 
     static <T> void print(T[] matrix, String s) {
