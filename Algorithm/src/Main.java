@@ -1,15 +1,17 @@
 import Sort.*;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class Main {
+    final static int size = 100000;
     static List<Integer> LIST;
     static Integer[] ARR;
     static Lambda<Integer> LAMBDA;
     static String SEPARATOR;
-    final static int size = 100000;
 
     static {
         ARR = getRandomArray(size);
@@ -19,35 +21,42 @@ public class Main {
     }
 
     public static void main(String[] args) {
-        test("Quick",       new Quick<Integer>());
-        test("Merge",       new Merge<Integer>());
+        test("Quick", new Quick<Integer>());
+        test("Merge", new Merge<Integer>());
         test("Div And Con", new DivAndCon<Integer>());
-        test("Bubble",      new Bubble<Integer>());
-        test("Selection",   new Selection<Integer>());
-        test("Insertion",   new Insertion<Integer>());
+        test("Bubble", new Bubble<Integer>());
+        test("Selection", new Selection<Integer>());
+        test("Insertion", new Insertion<Integer>());
     }
 
     static <T> void print(T[] matrix, String s) {
-        System.out.print("[");
-        for (int i = 0; i < matrix.length; i++) {
-            System.out.print(matrix[i]);
-            if (i + 1 != matrix.length) System.out.print(", ");
+        try (FileWriter file = new FileWriter("output.txt", true)) {
+            file.write("[");
+            for (int i = 0; i < matrix.length; i++) {
+                file.write(matrix[i] + "");
+                if (i + 1 != matrix.length) file.write(", ");
+            }
+            file.write("]" + s + "\n");
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-        System.out.println("]" + s);
     }
 
     static void test(String name, Sort<Integer> sort) {
         List<Integer> list = new ArrayList<>(LIST);
-        System.out.println(name + " : ");
-        Date date = new Date();
+        WriteToFile(name + " : ");
+        Date SDate = new Date();
         sort.s(list, LAMBDA);
-        System.out.println(list + "\nTime : " + (new Date().getTime() - date.getTime()) + "\n");
+        Date EDate = new Date();
+        print(list.toArray(), "\nTime : " + (EDate.getTime() - SDate.getTime()) + "\n");
 
         Integer[] matrix = Arrays.copyOf(ARR, ARR.length);
-        date = new Date();
+        SDate = new Date();
         sort.s(matrix, LAMBDA);
-        print(matrix, "\nTime : " + (new Date().getTime() - date.getTime()) + "\n");
-        System.out.println(SEPARATOR);
+        EDate = new Date();
+        print(matrix, "\nTime : " + (EDate.getTime() - SDate.getTime()) + "\n");
+        WriteToFile(SEPARATOR + "\n");
     }
 
     public static Integer[] getRandomArray(int size) {
@@ -56,9 +65,24 @@ public class Main {
         return array;
     }
 
-    public static String getSEPARATOR(String separator) {  return repeat(separator, LIST.toString().length()); }
+    public static String getSEPARATOR(String separator) {
+        return repeat(separator, LIST.toString().length());
+    }
 
-    public static String repeat(String str, int times) { return Stream.generate(() -> str).limit(times).collect(Collectors.joining()); }
+    public static String repeat(String str, int times) {
+        return Stream.generate(() -> str).limit(times).collect(Collectors.joining());
+    }
 
-    static boolean compare(Integer a, Integer b) { return a > b; }
+    static boolean compare(Integer a, Integer b) {
+        return a > b;
+    }
+
+    static void WriteToFile(String str) {
+        try (FileWriter file = new FileWriter("output.txt", true)) {
+            file.write(str + "\n");
+            file.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
